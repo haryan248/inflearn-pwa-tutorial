@@ -124,3 +124,71 @@ Safari의 경우 아래의 meta 태그를 head에 별도로 추가해주어야 �
 ```
 
 </aside>
+**Theme Color**
+
+-   `theme-color` 를 이용하여 앱 테마 색상을 정의할 수 있다.
+-   홈 화면에서 시작해야 설정한 도메인의 모든 페이지에 적용됨
+
+```jsx
+"theme_color" : "#2196F3"
+```
+
+**5) Display Orientation**
+
+-   화면 방향은 `orientation` 속성을 이용하고 옵션 값은 아래와 같다.
+    -   `portrait` : 세로 방향
+    -   `landscape` : 가로 방향
+    ```jsx
+    "orientation" : "landscape"
+    ```
+
+### Web App Install Banner
+
+-   PWA가 모바일적인 특징을 가지는 큰 부분의 하나
+-   기존 모바일 앱 개발주기 : 구현 → SDK 빌드 → 스토어 배포 → 검색 → 앱 다운로드 → 설치 → 사용
+-   PWA 앱 개발주기 : 구현 → 사이트 배포 → 검색 → 사용 (자동 설치)
+
+### Install Banner 동작 조건
+
+App Manifest 파일을 설정 후 아래 조건 만족시 동일 웹사이트에 대해 설치 배너 표시
+
+-   웹 사이트가 설치되어 있지 않음
+-   사용자가 최소 30초 이상 웹 사이트를 탐색
+-   `start_url`, `short_name`, `name` 설정
+-   최소 192px 크기의 앱 아이콘 이미지
+-   Service Worker의 fetch 이벤트 구현
+-   HTTPS
+
+`beforeinstallprompt` 로 설치 배너의 표시 시기를 지연하거나 disable 가능
+
+```jsx
+let deferredPrompt;
+// 설치 가능한지 확인
+
+window.addEventListener("beforeinstallprompt", function (e) {
+    console.log("beforeinstallprompt Event fired");
+    e.preventDefault();
+    deferredPrompt = e;
+});
+
+// 특정 버튼 클릭 시에 앱 설치
+btn.addEventListener("click", function (e) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function (result) {
+        if (result === "accepted") {
+            console.log("The app has been installed");
+        }
+        deferredPrompt = null;
+    });
+});
+```
+
+### Install Banner 디버깅
+
+-   주소창에 `chrome://flags` 입력
+-   설정 옵션 중 **사용자 참여 검사 우회** 체크하여 조건 충족
+
+### Web App Manifest 디버깅
+
+-   크롬 개발자 도구의 `Application tab` 을 이용하여 설정 정보 확인 가능
+-   **앱 아이콘 설치** 등을 테스트 해볼 수 있다.
