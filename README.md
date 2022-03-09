@@ -192,3 +192,27 @@ btn.addEventListener("click", function (e) {
 
 -   크롬 개발자 도구의 `Application tab` 을 이용하여 설정 정보 확인 가능
 -   **앱 아이콘 설치** 등을 테스트 해볼 수 있다.
+
+### 서비스 워커 정의, 자바스크립트와 워커의 차이점
+
+Caching, Offline, Native Features
+
+### Service Worker 소개
+
+-   **브라우저와 서버 사이의 미들웨어 역할을 하는 스크립트 파일**
+-   PWA에서 가장 중요한 역할을 하고, Offline Experinece 와 Moblie & Web Push의 기반 기술
+
+### Service Worker 특징
+
+1. **브라우저의 백그라운드에서 실행**되며 웹 페이지와 별개의 라이프 싸이클을 가짐
+    - Javascript UI 쓰레드랑 별도로 동작하는 또 다른 쓰레드
+2. **네트워크 요청을 가로챌 수 있어** 해당 자원에 대한 캐쉬 제공 또는 서버에 자원 요청
+    - 프로그래밍 가능한 네트워크 프록시(중계 서버)
+3. 브라우저 종속적인 **생명주기로 백그라운드 동기화 기능 제공**
+    - Push 알람의 진입접을 제공
+4. Web & Moblie Push 수신이 가능하도록 Notification 제공
+5. navigaotr.serviceworker로 접근
+6. 기존 Javascript 와의 **별개의 자체 스코프**를 가짐
+    - 크롬 개발자 도구의 Console 과의 별개의 서비스워커 전용 Console 존재
+7. DOM 에 직접적으로 접근이 불가능 - postMessage() 이용
+8. 사용하지 않을 때 **자체적으로 종료, 필요시에 다시 동작** (event-driven 존재)
