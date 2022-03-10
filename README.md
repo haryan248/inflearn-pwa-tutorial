@@ -216,3 +216,48 @@ Caching, Offline, Native Features
     - 크롬 개발자 도구의 Console 과의 별개의 서비스워커 전용 Console 존재
 7. DOM 에 직접적으로 접근이 불가능 - postMessage() 이용
 8. 사용하지 않을 때 **자체적으로 종료, 필요시에 다시 동작** (event-driven 존재)
+
+### Service Worker 배경
+
+기존에 이미 존재하던 기술들을 **보완 → 그리고 진화**
+
+AppCache
+
+-   오프라인 경험을 제공하기 위한 캐시 제공, HTML 표준
+-   복수 페이지 앱에서 오동작, 파일 변화에 대하 둔감한 캐싱등의 문제
+
+```jsx
+<html manifest="example.appcahce">
+</html>
+
+// 서버에 추가 설정 필요 mime-type = text/cache-manifest
+CACHE MANIFEST
+# 2010-06-18:v3
+
+# Explicitly cached entries
+index.html
+css/style.css
+
+# Additional resources to cache
+CACHE:
+images/logo1.png
+```
+
+**Workers**
+
+-   특정 작업을 병력 스크립트로 백그라운드에서 실행 및 처리하기 위한 수단, HTML 표준
+-   종류 :
+    -   Dedicated Workers, 라이프사이클 - 페이지 종속적
+    -   **Shared Workers**, 브라우징 (브라우저) 컨텍스트 → 서비스 워커와 관련됌
+
+**Shared Worker**
+
+-   Javascript UI 쓰레드와 별개의 쓰레드, Global script scope
+-   페이지에 비종속적 (페이지 라이프 사이클과 별개)
+-   직접적인 DOM 접근 불가
+
+그리하여 Service Worker 가 등장합니다.
+
+> A service worker is a type of web worker. - W3C spec
+
+> Service workers are a new browser feature that provice event-driven scripts that run independently of web pages - W3C Spec repo -
