@@ -299,3 +299,21 @@ var filesToCache = ["/", "/js/app.js", "/css/base.css"];
 
 -   `CACHE_NAME` : 캐쉬를 담을 파일명 정의
 -   `filesToCache` : 캐쉬할 웹 자원들 정의
+
+```jsx
+self.addEventListener('install', function(event) {
+	event.waitUntil(
+		caches.open(CACHE_NAME).then(function(cache) {
+		// 위에 지정한 캐쉬 목록을 'cache-v1' 캐쉬에 추가
+		return cache.addAll(filesTocCache);
+	}
+}
+```
+
+-   `waitUntil()` : 안의 로직이 수행될 때 까지 대기
+
+**주의 : 캐쉬할 파일 중 한개라도 실패하면 전체 실패. 이를 해결하기 위해 sw-toolbox 사용 가능**
+
+**참고 링크**
+
+-   [self 예약어](https://developer.mozilla.org/en-US/docs/Web/API/Window/self#Browser_compatibility)
