@@ -261,3 +261,41 @@ images/logo1.png
 > A service worker is a type of web worker. - W3C spec
 
 > Service workers are a new browser feature that provice event-driven scripts that run independently of web pages - W3C Spec repo -
+
+### Service Worker 등록
+
+-   브라우저에 존재 유무를 확인 후 `register()` 사용
+
+```jsx
+if ("serviceWorker" in navigator) {
+    navigator.serviceWOrker.register("/service-worker.js");
+    // Promise 이용
+    navigator.serviceWorker
+        .register("/service-woker.js")
+        .then(function (reg) {
+            // 성공하면
+            console.log("Okay it worked!", reg);
+        })
+        .catch(function (err) {
+            console.log("Oops, an error occured", err);
+        });
+}
+```
+
+### Service Worker 설치
+
+-   `register()` 에서 등록한 스크립트 파일에서 `install()` 호출
+
+```jsx
+self.addEventListener("install", function (event) {
+    // 캐쉬 등록 또는 기타 로직 수행
+});
+```
+
+```jsx
+var CACHE_NAME = "cache-v1";
+var filesToCache = ["/", "/js/app.js", "/css/base.css"];
+```
+
+-   `CACHE_NAME` : 캐쉬를 담을 파일명 정의
+-   `filesToCache` : 캐쉬할 웹 자원들 정의
