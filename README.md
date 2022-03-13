@@ -317,3 +317,17 @@ self.addEventListener('install', function(event) {
 **참고 링크**
 
 -   [self 예약어](https://developer.mozilla.org/en-US/docs/Web/API/Window/self#Browser_compatibility)
+
+<aside>
+💡 **디버깅 시 주의 사항**
+
+Application > unregister후에 다시 새로고침해야 적용
+또는 update on reload 클릭
+
+**파일 캐싱 에러 처리 요령**
+반드시 catch()로 잡아줘야 해당 위치로 에러가 이동합니다.
+
+-   [event.waitUntil()](https://developer.mozilla.org/en-US/docs/Web/API/ExtendableEvent/waitUntil)
+-   [Cache Storage](https://developer.mozilla.org/en-US/docs/Web/API/Cache)
+-   [caches.open()](https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage/open)
+</aside>

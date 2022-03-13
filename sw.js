@@ -14,6 +14,7 @@ self.addEventListener('install', function(event){
         .then(function(cache){
             // pwa 파일에 다 집어 넣어라
             return cache.addAll(filesToCache);
+            // 생성한 캐쉬에 웹 자원들 추가
         })
         .catch(function(error) {
             return console.log(error)
