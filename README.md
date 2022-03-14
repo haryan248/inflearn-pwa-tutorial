@@ -331,3 +331,37 @@ Application > unregister후에 다시 새로고침해야 적용
 -   [Cache Storage](https://developer.mozilla.org/en-US/docs/Web/API/Cache)
 -   [caches.open()](https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage/open)
 </aside>
+
+실습 브랜치 안내
+
+1. master -> 리포지토리의 맨 처음 (웹 페이지와 관련된 코드만 HTML, CSS, JS)
+2. feature/manifest -> 완성된 웹 앱 매니페스트 파일이 존재
+3. feature/sw-install -> install 이벤트까지 구현한 서비스워커 파일 존재
+4. feature/sw-fetch ->
+5. feature/sw-activate ->
+
+### 서비스 워커 네트워크 요청 - fetch 이벤트 구현 및 동작 확인
+
+Service Worker 네트워크 요청 응답
+
+-   서비스워커 설치 후 캐쉬된 자원에 대한 네트워크 요청이 있을 때는 캐쉬로 돌려준다.
+
+```jsx
+self.addEvenListener('fetch', function(event) {
+	event.respondWith(
+		caches.match(event.request).then(function(response) {
+			if (response) {
+				return response;
+			}
+			return fetch(event.request);
+	}
+}
+```
+
+-   `respondWith()` : Fetch 이벤트 응답(Response)를 반환
+-   `match()` : 해당 request에 상응하는 캐쉬가 있으면 찾아서 돌려주고 아니면 `fetch()`로 자원 획득
+
+**참고 링크**
+
+-   [event.respondWith()](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent/respondWith)
+-   [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
