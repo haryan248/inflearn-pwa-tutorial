@@ -365,3 +365,108 @@ self.addEvenListener('fetch', function(event) {
 
 -   [event.respondWith()](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent/respondWith)
 -   [fetch()](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
+
+### Service Worker 활성화 및 업데이트
+
+-   새로운 서비스 워커가 설치되면 활성화 단계로 넘어온다.
+-   이전에 사용하던 서비스워커와 이전 캐쉬는 모두 삭제하는 작업 진행
+
+```jsx
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+      cache.keys().then(function(cacheNames) {
+        return Promise.all(
+          cacheNames.map(function(cacheNames) {
+						// 새로운 서비스 워커에서 사용할 캐쉬 이외의 캐쉬는 모두 삭제
+            if (cacheWhiteList.indexOf(cacheName) === -1) {
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      });
+    })
+  );
+});
+```
+
+> 기존에 실행 중인 서비스워커와 사이즈를 비교하여 1 바이트라도 차이나면 새걸로 간주
+
+### Service Worker 라이프 싸이클
+
+-   **서비스워커는 웹 페이지와 별개의 생명주기**
+-   서비스워커 등록 & 설치 & 활성화 과정을 잠깐 보면
+    -   **웹페이지에서** 서비스워커 스크립트 **호출**
+    -   브라우저 **백그라운드**에서 서비스워커 **설치**
+    -   **설치 과정에서** 정적 자원(css, html) **캐싱**(Cache 실패시 Install 실패)
+    -   **설치 후 활성화**. 네트워크 요청에 대한 가로채기 가능
+-   사용하지 않을 떄는 휴지 상태. 필요시에만 해당 기능 수행
+-   메모리 상태에 따라 자체적으로 종료하는 영리함
+
+## PWA 보조 라이브러리
+
+### 서비스 워커 보조 라이브러리
+
+-   [sw-toolbox 깃헙 리포지토리 링크](https://github.com/GoogleChromeLabs/sw-toolbox)
+-   [sw-precache 깃헙 리포지토리 링크](https://github.com/GoogleChromeLabs/sw-precache)
+-   [workbox 공식 사이트 링크](https://developers.google.com/web/tools/workbox/)
+
+### sw-toolbox
+
+-   네트워크 요청과 캐쉬 관리에 추가적인 옵션(만료기한 등)을 제공해주는 서비스워커 보조 라이브러리
+
+```jsx
+npm install --save sw-toolbox
+```
+
+-   사용방법은 아래와 같이 단순하다.
+
+```jsx
+// service-worker.js
+importScripts('bower_components/sw-toolbox/sw-toolbox.js');
+
+// 참고 - importScripts
+importScripts('a.js', 'b.js', ...); // 복수 라이브러리 로딩 기능
+```
+
+-   상세한 사용법
+
+### sw-precache in Glup
+
+-   웹 자원을 런타임 시점 이전에 **사전 캐싱 가능한 서비스워커 생성 모듈**
+-   sw toolbox 라이브러리와 **같이 사용** 가능
+-   캐싱 시점을 런타임 이전 또는 런차임 시로 **변경 가능**
+-   **Cache First Strategy**
+
+```jsx
+// 설치
+npm install --save-dev sw-precache
+npm install --global sw-precache
+```
+
+**사용 방법**
+
+```jsx
+var swPrecache = require('sw-precache');
+
+glup.task('generate-service-worker', function(callback) {
+	swPrecache.write(`${rootDir}/service-worker.js`, {
+		staticFileGlobs: [rootDir + '/**/".{js,html,css,png,hjpg,gif,svg,eot,ttf,woff}'],
+		stripPrefix:'app' // 빌드시점과 런타임 시점에 다를 수 있는 상대 경로를 위해 앞 특정 문자열 제거
+	}, callback);
+}
+```
+
+CLI 를 이용하여 사용 가능
+
+```jsx
+sw-precache
+sw-precache --root=dist --static-file-globs='dist/**/*.html'
+```
+
+```jsx
+sw-precache --config sw-config.js
+```
+
+명령어 시 `service-worker.js` 파일 생성
+
+web fundamental : PWA 공식 사이트
